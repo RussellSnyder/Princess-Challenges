@@ -1,0 +1,29 @@
+{
+  "name": "princess-challenges",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run serve\"",
+    "server": "node server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RussellSnyder/Princess-Challenges.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RussellSnyder/Princess-Challenges/issues"
+  },
+  "homepage": "https://github.com/RussellSnyder/Princess-Challenges#readme",
+  "dependencies": {
+    "@contentful/rich-text-html-renderer": "^13.1.0",
+    "body-parser": "^1.19.0",
+    "contentful": "^4.3.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "dotenv": "^8.0.0"
+  }
+}
