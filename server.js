@@ -6,7 +6,8 @@ const fs = require('fs');
 const path = require('path');
 const contentful = require('contentful')
 
-const { getAllBlogPosts } = require('./contentful.service.js')
+const BlogPostModel = require('./blogPost.model')
+const ChallengeModel = require('./challenge.model')
 
 ////////////////////////
 /// Contentful Stuff ///
@@ -16,6 +17,8 @@ const client = contentful.createClient({
     accessToken: process.env.CONTENTFUL_ACCESS_TOKEN
 })
 
+const blogPostModel = new BlogPostModel(client)
+const challengeModel = new ChallengeModel(client)
 
 ////////////////////////
 //// Express Stuff /////
@@ -35,13 +38,54 @@ app.use((req, res, next) => {
 });
 
 app.get('/', (req, res) => {
-    getAllBlogPosts(client)
+    challengeModel.getAllChallenges()
+            .then(challenges => {
+                        res.setHeader('Cache-Control', 'no-cache');
+                        res.json(JSON.stringify(challenges));
+                    }
+            )
+});
+
+app.get('/blog', (req, res) => {
+    blogPostModel.getAllBlogPosts()
             .then(posts => {
                         res.setHeader('Cache-Control', 'no-cache');
                         res.json(JSON.stringify(posts));
                     }
             )
 });
+
+app.get('/blog/:slug', (req, res) => {
+    const { slug } = req.params;
+    blogPostModel.getBlogPostBySlug(slug)
+            .then(post => {
+                        res.setHeader('Cache-Control', 'no-cache');
+                        res.json(JSON.stringify(post));
+                    }
+            ).catch(e => `no post for slug ${slug}: ${e}`)
+});
+
+
+app.get('/challenges', (req, res) => {
+    challengeModel.getAllChallenges()
+            .then(posts => {
+                        res.setHeader('Cache-Control', 'no-cache');
+                        res.json(JSON.stringify(posts));
+                    }
+            )
+});
+
+
+app.get('/challenges/:slug', (req, res) => {
+    const { slug } = req.params;
+    challengeModel.getChallengeBySlug(slug)
+            .then(post => {
+                        res.setHeader('Cache-Control', 'no-cache');
+                        res.json(JSON.stringify(post));
+                    }
+            ).catch(e => `no post for slug ${slug}: ${e}`)
+});
+
 
 app.listen(app.get('port'), () => {
     console.log(`Find the server at: http://localhost:${app.get('port')}/`);
