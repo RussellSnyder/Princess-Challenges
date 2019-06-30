@@ -11,6 +11,8 @@ const env = require("dotenv").config({
     path: `.env.${activeEnv}`,
 })
 
+console.log(`---------${process.env.CONTENTFUL_ACCESS_TOKEN}----------`)
+console.log(`---------${process.env.CONTENTFUL_SPACE_ID}----------`)
 
 const BlogPostModel = require('./blogPost.model')
 const ChallengeModel = require('./challenge.model')
