@@ -1,6 +1,10 @@
 {
   "name": "princess-challenges",
   "version": "1.0.0",
+  "engines": {
+    "node": "10.15.0",
+    "npm": "6.x"
+  },
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,7 +12,7 @@
     "server": "node server",
     "build-client": "cd app && GATSBY_ACTIVE_ENV=production gatsby build ",
     "start": "concurrently \"npm run server\" \"npm run client\"",
-    "build": "concurrently \"npm run server\" \"npm run build-client\""
+    "build": "npm run server"
   },
   "repository": {
     "type": "git",
@@ -19,6 +23,7 @@
   "bugs": {
     "url": "https://github.com/RussellSnyder/Princess-Challenges/issues"
   },
+
   "homepage": "https://github.com/RussellSnyder/Princess-Challenges#readme",
   "dependencies": {
     "@contentful/rich-text-html-renderer": "^13.1.0",
