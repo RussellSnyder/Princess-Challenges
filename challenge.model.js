@@ -32,7 +32,7 @@ module.exports = class ChallengeModel {
                     })
                 })
                 .then(challenges => {
-                    console.log(util.inspect(challenges, {showHidden: false, depth: null}))
+                    // console.log(util.inspect(challenges, {showHidden: false, depth: null}))
                     return challenges
                 })
                 .catch(e => console.log(e))

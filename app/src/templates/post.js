@@ -9,7 +9,6 @@ export default class Post extends React.Component {
 
     render() {
         const props = this.props.pageContext
-        console.log(props)
 
         return (<Layout className="blog-post">
             <section>

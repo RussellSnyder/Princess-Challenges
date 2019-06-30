@@ -1,13 +1,11 @@
 const axios = require("axios");
 
-const baseURL = process.env.API_ENDPOINT;
+const baseURL = process.env.API_URL;
+
+console.log(baseURL)
 
 exports.createPages = async ({ actions: { createPage } }) => {
     const allChallenges = await axios.get(`${baseURL}challenges`)
-            .then(response => {
-                console.log(JSON.parse(response.data))
-                return response
-            })
             .then(response => JSON.parse(response.data))
             .catch(e => console.log(e))
 

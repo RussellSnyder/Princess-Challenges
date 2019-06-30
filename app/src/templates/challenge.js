@@ -22,7 +22,6 @@ export default class Challenge extends React.Component {
 
     render() {
         const props = this.props.pageContext
-        console.log(props)
 
         return (<Layout footerScripts={["//assets.pinterest.com/js/pinit.js"]} className="challenge">
             <h1>{props.title}</h1>
