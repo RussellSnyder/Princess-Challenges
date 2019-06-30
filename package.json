@@ -12,7 +12,7 @@
     "server": "node server",
     "build-client": "cd app && GATSBY_ACTIVE_ENV=production gatsby build ",
     "start": "concurrently \"npm run server\" \"npm run client\"",
-    "build": "npm run server"
+    "build": "concurrently \"npm run server\" \"npm run build-client\""
   },
   "repository": {
     "type": "git",
