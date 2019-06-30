@@ -6,10 +6,10 @@ const { parseImage } = require('./contentful.parser')
 
 function parseChallngeBingoSpaces(spaces) {
     return spaces.map(space => {
-        let { task, reptition, category } = space.fields
+        let { task, repetitions, category } = space.fields
         return {
             task,
-            reptition,
+            repetitions,
             category: category.fields.name
         }
     })

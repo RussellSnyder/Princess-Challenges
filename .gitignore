@@ -62,3 +62,7 @@ typings/
 
 # ide nonsense
 .idea/
+
+# random 
+.DS_Store
+app/.cache/

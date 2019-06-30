@@ -1,0 +1,16 @@
+section {
+    margin-bottom: 4em;
+}
+.challenge-bingo .board .space {
+    border: 1px solid black;
+}
+
+.repetition-box {
+    display: inline-block;
+    border: 1px solid black;
+    background: transparent;
+    width: 10px;
+    height: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
