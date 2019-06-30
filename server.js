@@ -1,10 +1,16 @@
 'use strict'
-const env = require('dotenv').config()
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
 const contentful = require('contentful')
+
+let activeEnv = process.env.GATSBY_ACTIVE_ENV || process.env.NODE_ENV || "development"
+
+const env = require("dotenv").config({
+    path: `.env.${activeEnv}`,
+})
+
 
 const BlogPostModel = require('./blogPost.model')
 const ChallengeModel = require('./challenge.model')
