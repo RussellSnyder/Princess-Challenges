@@ -45,7 +45,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get('/', (req, res) => {
+app.get('/api/', (req, res) => {
     challengeModel.getAllChallenges()
             .then(challenges => {
                         res.setHeader('Cache-Control', 'no-cache');
@@ -54,7 +54,7 @@ app.get('/', (req, res) => {
             )
 });
 
-app.get('/blog', (req, res) => {
+app.get('/api/blog', (req, res) => {
     blogPostModel.getAllBlogPosts()
             .then(posts => {
                         res.setHeader('Cache-Control', 'no-cache');
@@ -63,7 +63,7 @@ app.get('/blog', (req, res) => {
             )
 });
 
-app.get('/blog/:slug', (req, res) => {
+app.get('/api/blog/:slug', (req, res) => {
     const { slug } = req.params;
     blogPostModel.getBlogPostBySlug(slug)
             .then(post => {
@@ -74,7 +74,7 @@ app.get('/blog/:slug', (req, res) => {
 });
 
 
-app.get('/challenges', (req, res) => {
+app.get('/api/challenges', (req, res) => {
     challengeModel.getAllChallenges()
             .then(posts => {
                         res.setHeader('Cache-Control', 'no-cache');
@@ -84,7 +84,7 @@ app.get('/challenges', (req, res) => {
 });
 
 
-app.get('/challenges/:slug', (req, res) => {
+app.get('/api/challenges/:slug', (req, res) => {
     const { slug } = req.params;
     challengeModel.getChallengeBySlug(slug)
             .then(post => {
