@@ -4,7 +4,7 @@ import {Col, Container, Nav, Row} from "react-bootstrap";
 
 export default ({ children, footerScripts, className }) => (
         <Container className={className}>
-            <Row>
+            <Row className="no-print">
                 <Col>
                     <Nav className="justify-content-start" activeKey="/">
                         <Nav.Item>

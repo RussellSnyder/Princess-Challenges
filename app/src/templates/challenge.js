@@ -1,15 +1,29 @@
 import React from "react"
 import Layout from "../components/layout"
 import {Col, Image, Row} from "react-bootstrap";
-import { Link } from "gatsby"
+import {Link} from "gatsby"
+import _ from 'lodash';
+
+const BINGO_CARD_SIZE = 25;
 
 export default class Challenge extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            dirtyBingoSpaces: [],
+            printPreview: false
+        }
+    }
+
     componentDidMount() {
         const script = document.createElement("script");
         script.src = "//assets.pinterest.com/js/pinit.js";
         script.async = true;
 
         document.body.appendChild(script);
+
+        this.arrangeBingoSpaces()
     }
 
     createTaskBoxes(numBoxes) {
@@ -20,30 +34,55 @@ export default class Challenge extends React.Component {
         return boxes
     }
 
+    arrangeBingoSpaces() {
+        const {bingoChallengeSpaces} = this.props.pageContext.challengeBingo
+
+        let dirtyBingoSpaces = _.sampleSize(bingoChallengeSpaces, BINGO_CARD_SIZE)
+        // TODO use weighting system to determine likelihood of category placement
+
+        this.setState({dirtyBingoSpaces})
+
+    }
+
     render() {
         const props = this.props.pageContext
+        const {dirtyBingoSpaces: spaces} = this.state;
 
         return (<Layout footerScripts={["//assets.pinterest.com/js/pinit.js"]} className="challenge">
             <h1>{props.title}</h1>
-            <div className="featured-image">
+            <div className="featured-image no-print">
                 <Image src={props.featuredImage.url} alt={props.featuredImage.title} fluid="true"/>
             </div>
             <section className="description" dangerouslySetInnerHTML={{__html: props.description}}/>
             <section className="challenge-bingo">
-                <Row className="board h-100 justify-content-center align-items-center">
-                    {props.challengeBingo.bingoChallengeSpaces.map((space, i) => {
-                        return <Col key={i} xs={12} sm={3} md={{ span: 2, offset: i === 0 ? 1 : 0}}
-                                    className="text-center space my-auto mx-2">
-                            {space.task}
-                            <div className="repetition">
-                                {this.createTaskBoxes(space.repetitions)}
+                <Image className="print-only background-image" src={props.featuredImage.url} />
+
+                <Row className="no-print">
+                    <Col>
+                        <button className="btn btn-primary" onClick={() => this.arrangeBingoSpaces()}>Shuffle</button>
+                    </Col>
+                    <Col className="text-right">
+                        <button className="btn btn-success" onClick={() => window.print()}>Print</button>
+                    </Col>
+                </Row>
+                <hr/>
+                <div className="board">
+                    {spaces.map((space, i) => {
+                        return <div key={i}
+                                    className={`text-center space ${space.category}`}>
+                            <div className="content">
+                                {space.task}
+                                <div className="repetition">
+                                    {this.createTaskBoxes(space.repetitions)}
+                                </div>
+
                             </div>
-                        </Col>
+                        </div>
                     })
                     }
-                </Row>
+                </div>
             </section>
-            <section className="pinterst">
+            <section className="pinterst no-print">
                 <header><h3>{props.pinterestHeader}</h3></header>
                 <main>
                     <a data-pin-do="embedBoard"
@@ -55,7 +94,7 @@ export default class Challenge extends React.Component {
                 </main>
                 <footer><h4>{props.pinterestFooter}</h4></footer>
             </section>
-            <section className="related-posts">
+            <section className="related-posts no-print">
                 <Row>
                     {props.relevantBlogPosts.map(post => {
                         return <Col>

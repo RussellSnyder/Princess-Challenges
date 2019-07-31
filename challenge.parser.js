@@ -5,7 +5,7 @@ const { parseBlogPost } = require('./blogPost.parser')
 const { parseImage } = require('./contentful.parser')
 
 function parseChallngeBingoSpaces(spaces) {
-    return spaces.map(space => {
+    const parsedSpaces = spaces.map(space => {
         let { task, repetitions, category } = space.fields
         return {
             task,
@@ -13,6 +13,10 @@ function parseChallngeBingoSpaces(spaces) {
             category: category.fields.name
         }
     })
+
+    // TODO replace once enough spaces are input
+    // for now gotta design this board!
+    return [...parsedSpaces, ...parsedSpaces, ...parsedSpaces, ...parsedSpaces, ...parsedSpaces]
 }
 
 function parseChallengeBingo(challengeBingo) {

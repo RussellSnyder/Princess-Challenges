@@ -9,4 +9,5 @@ module.exports = {
         title: "Irini's Challenges",
         apiUrl: process.env.API_URL,
     },
+    plugins: [`gatsby-plugin-less`]
 }

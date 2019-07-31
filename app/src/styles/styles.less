@@ -1,0 +1,101 @@
+/*A4 measures 210 × 297*/
+section {
+  margin-bottom: 4em;
+}
+
+@media print {
+  .no-print {
+    display: none;
+  }
+
+  .print-only {
+    display: block;
+  }
+  .challenge {
+    h1 {
+      text-align: center;
+    }
+    .challenge-bingo {
+      width: 190mm;
+      position: relative;
+      margin-left: 70mm;
+      margin-right: 0;
+      margin-top: 30mm;
+
+      .board {
+        width: 100%;
+        display: block;
+      }
+
+      .background-image {
+        position: absolute;
+        z-index: -1;
+        top: -20mm;
+        left: -70mm;
+        height: auto;
+        max-width: 150mm;
+      }
+    }
+  }
+}
+
+@media screen {
+  .print-only {
+    display: none;
+  }
+}
+
+
+.challenge {
+  h1, .featured-image {
+    margin-bottom: 2.5rem;
+  }
+
+  .challenge-bingo {
+    .board {
+      display: grid;
+      width: 90%;
+      grid-gap: 0px 0px;
+      grid-template-columns: 20% 20% 20% 20% 20%;
+      grid-template-rows: 20% 20% 20% 20% 20%;
+      border: 1px solid black;
+      /*justify-items: center;*/
+      align-items: center;
+      margin: auto;
+
+      .space {
+        line-height: 6mm;
+        word-break: break-word;
+        padding: 4mm;
+        border: 1px solid black;
+        height: 50mm;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .repetition {
+          margin-top: 10px;
+
+          .repetition-box {
+            display: inline-block;
+            border: 1px solid black;
+            background: transparent;
+            width: 12px;
+            height: 12px;
+            margin-left: 5px;
+            margin-right: 5px;
+          }
+        }
+      }
+    }
+  }
+
+  .pinterst {
+    main > span {
+      display: block;
+      margin: auto;
+
+    }
+  }
+}
