@@ -2,6 +2,10 @@ const { documentToHtmlString } = require('@contentful/rich-text-html-renderer');
 const slugify = require('slugify');
 
 function parseBlogPost(post) {
+    if (!post) {
+        return
+    }
+
     let {title, short, long, tags} = post.fields
 
     let renderedLong = documentToHtmlString(long);

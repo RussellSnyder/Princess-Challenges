@@ -6,26 +6,38 @@ const { parseImage } = require('./contentful.parser')
 
 function parseChallngeBingoSpaces(spaces) {
     const parsedSpaces = spaces.map(space => {
-        let { task, repetitions, category } = space.fields
+        let { task, repetitions, category, challengeAssigned } = space.fields
         return {
             task,
             repetitions,
-            category: category.fields.name
+            category: category.fields.name,
+            challengeAssigned: challengeAssigned ? challengeAssigned.map(challenge => challenge.title) : []
         }
     })
 
-    // TODO replace once enough spaces are input
-    // for now gotta design this board!
-    return [...parsedSpaces, ...parsedSpaces, ...parsedSpaces, ...parsedSpaces, ...parsedSpaces]
+    return [...parsedSpaces]
+}
+
+function parseChallngeBingoSpacesTemplate(bingoChallengeGridTemplate) {
+    const { name, template } = bingoChallengeGridTemplate.fields;
+    return {
+        name,
+        categories: template.categories
+    }
 }
 
 function parseChallengeBingo(challengeBingo) {
-    let {title, numberOfSpaces, bingoChallengeSpaces} = challengeBingo.fields
+    if (!challengeBingo) {
+        return
+    }
+
+    let {title, numberOfSpaces, bingoChallengeGridTemplate, taskCollection} = challengeBingo.fields
 
     return {
         title,
         numberOfSpaces,
-        bingoChallengeSpaces: parseChallngeBingoSpaces(bingoChallengeSpaces)
+        bingoChallengeSpaces: parseChallngeBingoSpaces(taskCollection),
+        bingoChallengeGridTemplate: parseChallngeBingoSpacesTemplate(bingoChallengeGridTemplate)
     }
 }
 
@@ -49,7 +61,7 @@ function parseChallenge(challenge) {
         description: documentToHtmlString(description),
         featuredImage: parseImage(featuredImage),
         challengeBingo: parseChallengeBingo(challengeBingo),
-        relevantBlogPosts: relevantBlogPosts.map(parseBlogPost),
+        relevantBlogPosts: relevantBlogPosts ? relevantBlogPosts.map(parseBlogPost) : null,
         pinterestHeader,
         pinterestLink,
         pinterestFooter

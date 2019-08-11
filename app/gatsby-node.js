@@ -7,6 +7,8 @@ exports.createPages = async ({ actions: { createPage } }) => {
             .then(response => JSON.parse(response.data))
             .catch(e => console.log(e))
 
+   // filter(space => space.category === 'Freestyle'))
+
     createPage({
         path: `/challenges`,
         component: require.resolve("./src/templates/challenges.js"),

@@ -2,16 +2,14 @@ import React from "react"
 import Layout from "../components/layout"
 import {Col, Image, Row} from "react-bootstrap";
 import {Link} from "gatsby"
-import _ from 'lodash';
 
-const BINGO_CARD_SIZE = 25;
+import BingoChallengeGrid from '../components/BingoChallengeGrid'
 
 export default class Challenge extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            dirtyBingoSpaces: [],
             printPreview: false
         }
     }
@@ -23,64 +21,30 @@ export default class Challenge extends React.Component {
 
         document.body.appendChild(script);
 
-        this.arrangeBingoSpaces()
     }
 
-    createTaskBoxes(numBoxes) {
-        let boxes = [];
-        for (let i = 1; i <= Number(numBoxes); i++) {
-            boxes.push(<span key={i} className="repetition-box"/>)
-        }
-        return boxes
-    }
 
-    arrangeBingoSpaces() {
-        const {bingoChallengeSpaces} = this.props.pageContext.challengeBingo
-
-        let dirtyBingoSpaces = _.sampleSize(bingoChallengeSpaces, BINGO_CARD_SIZE)
-        // TODO use weighting system to determine likelihood of category placement
-
-        this.setState({dirtyBingoSpaces})
-
-    }
 
     render() {
         const props = this.props.pageContext
-        const {dirtyBingoSpaces: spaces} = this.state;
+
+        // console.log(props.arrangedBingoSpaces)
 
         return (<Layout footerScripts={["//assets.pinterest.com/js/pinit.js"]} className="challenge">
             <h1>{props.title}</h1>
             <div className="featured-image no-print">
-                <Image src={props.featuredImage.url} alt={props.featuredImage.title} fluid="true"/>
+                <Image className={"d-block m-auto"}
+                        src={props.featuredImage.url}
+                       alt={props.featuredImage.title}
+                       fluid="true"/>
             </div>
-            <section className="description" dangerouslySetInnerHTML={{__html: props.description}}/>
+            <section className="description no-print" dangerouslySetInnerHTML={{__html: props.description}}/>
+            <Row className={"print-only print-header"}>
+                <Image fluid={true} src={props.featuredImage.url}/>
+                <section className="description" dangerouslySetInnerHTML={{__html: props.description}}/>
+            </Row>
             <section className="challenge-bingo">
-                <Image className="print-only background-image" src={props.featuredImage.url} />
-
-                <Row className="no-print">
-                    <Col>
-                        <button className="btn btn-primary" onClick={() => this.arrangeBingoSpaces()}>Shuffle</button>
-                    </Col>
-                    <Col className="text-right">
-                        <button className="btn btn-success" onClick={() => window.print()}>Print</button>
-                    </Col>
-                </Row>
-                <hr/>
-                <div className="board">
-                    {spaces.map((space, i) => {
-                        return <div key={i}
-                                    className={`text-center space ${space.category}`}>
-                            <div className="content">
-                                {space.task}
-                                <div className="repetition">
-                                    {this.createTaskBoxes(space.repetitions)}
-                                </div>
-
-                            </div>
-                        </div>
-                    })
-                    }
-                </div>
+                <BingoChallengeGrid { ...props } />
             </section>
             <section className="pinterst no-print">
                 <header><h3>{props.pinterestHeader}</h3></header>
@@ -97,12 +61,13 @@ export default class Challenge extends React.Component {
             <section className="related-posts no-print">
                 <Row>
                     {props.relevantBlogPosts.map(post => {
-                        return <Col>
+                        return <Col key={post.slug}>
                             <Link to={`blog/${post.slug}`}>{post.title}</Link>
                         </Col>
                     })}
                 </Row>
             </section>
+            <footer className={"print-only text-center"}>Pinterest Board: {props.pinterestLink}</footer>
         </Layout>)
     }
 }

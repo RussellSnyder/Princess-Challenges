@@ -1,3 +1,5 @@
+@import "typography";
+
 /*A4 measures 210 × 297*/
 section {
   margin-bottom: 4em;
@@ -16,24 +18,15 @@ section {
       text-align: center;
     }
     .challenge-bingo {
-      width: 190mm;
+      width: 258mm;
       position: relative;
-      margin-left: 70mm;
+      margin-left: 0;
       margin-right: 0;
       margin-top: 30mm;
 
       .board {
         width: 100%;
         display: block;
-      }
-
-      .background-image {
-        position: absolute;
-        z-index: -1;
-        top: -20mm;
-        left: -70mm;
-        height: auto;
-        max-width: 150mm;
       }
     }
   }
@@ -68,7 +61,7 @@ section {
         word-break: break-word;
         padding: 4mm;
         border: 1px solid black;
-        height: 50mm;
+        height: 45mm;
         position: relative;
         display: flex;
         justify-content: center;
@@ -88,6 +81,20 @@ section {
           }
         }
       }
+
+      .editable {
+        .label {
+          position: absolute;
+          top: 5px;
+          right: 5px;
+          &:hover {
+            cursor: pointer;
+          }
+        }
+        textarea, input {
+          text-align: center;
+        }
+      }
     }
   }
 
@@ -99,3 +106,14 @@ section {
     }
   }
 }
+  .print-header {
+    img {
+      height: auto;
+      max-width: 120mm;
+      float: left;
+    }
+    .description {
+      float: left;
+      margin-top: 30px;
+    }
+  }
