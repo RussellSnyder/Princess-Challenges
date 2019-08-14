@@ -59,14 +59,31 @@ section {
       .space {
         line-height: 6mm;
         word-break: break-word;
-        padding: 4mm;
         border: 1px solid black;
         height: 45mm;
         position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        display: grid;
+        //justify-content: center;
+        //align-items: center;
 
+        .pin-and-ban {
+          position: relative;
+          width: 100%;
+          padding: 1mm 2mm;
+          .pin {
+            float: left;
+
+            .fa-stack { font-size: 0.5em; }
+            i { vertical-align: middle; }
+          }
+          .ban {
+            float: right;
+          }
+        }
+
+        .content {
+          padding: 3mm;
+        }
         .repetition {
           margin-top: 10px;
 
@@ -83,6 +100,7 @@ section {
       }
 
       .editable {
+        padding-top: 10mm;
         .label {
           position: absolute;
           top: 5px;

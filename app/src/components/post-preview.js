@@ -1,6 +1,6 @@
 import React from "react"
 import {Link} from "gatsby";
-import {Badge, Card, Col} from "react-bootstrap";
+import {Badge, Card} from "react-bootstrap";
 
 export default ({ slug, short, title, tags }) => {
     return (<Card className="blog-post-preview card">

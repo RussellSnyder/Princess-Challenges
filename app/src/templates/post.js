@@ -1,7 +1,6 @@
 import React from "react"
 import Layout from "../components/layout"
-import {Badge, Col, Image, Row} from "react-bootstrap";
-import { Link } from "gatsby"
+import {Badge} from "react-bootstrap";
 
 export default class Post extends React.Component {
     componentDidMount() {

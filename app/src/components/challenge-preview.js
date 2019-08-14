@@ -1,6 +1,6 @@
 import React from "react"
 import {Link} from "gatsby";
-import {Card, Col} from "react-bootstrap";
+import {Card} from "react-bootstrap";
 
 export default ({ slug, title, featuredImage }) => {
     return (<Card className="challenge-preview card">
