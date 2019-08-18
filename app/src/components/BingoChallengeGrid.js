@@ -2,6 +2,8 @@ import {Col, Row} from "react-bootstrap";
 import React from "react";
 import _ from "lodash";
 import header from "./header";
+import Card from "react-bootstrap/Card";
+import ListGroup from "react-bootstrap/ListGroup";
 
 const CENTER_INDEX = 12;
 const BINGO_SPACE_COUNT = 25;
@@ -19,12 +21,12 @@ export default class BingoChallengeGrid extends React.Component {
             maxBingoSpacesBanned: false
         }
 
-        this.bingoChallengeSpaces = props.challengeBingo.bingoChallengeSpaces
+        this.taskCollection = props.challengeBingo.taskCollection
         this.bingoChallengeGridTemplate = props.challengeBingo.bingoChallengeGridTemplate
     }
 
     componentDidMount() {
-        const freestyleSpace = _.find(this.bingoChallengeSpaces, space => space.category === "Freestyle")
+        const freestyleSpace = _.find(this.taskCollection, space => space.category === "Freestyle")
 
         this.setState({freestyleTask: freestyleSpace.task}, () => {
             this.arrangeBingoSpaces()
@@ -41,11 +43,11 @@ export default class BingoChallengeGrid extends React.Component {
     }
 
     arrangeBingoSpaces() {
-        const { bannedBingoSpaces } = this.state;
+        const {bannedBingoSpaces} = this.state;
 
         let newlyArrangedBingoSpaces = [];
 
-        let cleanBingoSpaces = _.cloneDeep(this.bingoChallengeSpaces);
+        let cleanBingoSpaces = _.cloneDeep(this.taskCollection);
 
         // remove banned bingo spaces
         if (bannedBingoSpaces.length > 0) {
@@ -94,7 +96,7 @@ export default class BingoChallengeGrid extends React.Component {
             }
         })
 
-        // let newlyArrangedBingoSpaces = _.sampleSize(this.bingoChallengeSpaces, BINGO_CARD_SIZE)
+        // let newlyArrangedBingoSpaces = _.sampleSize(this.taskCollection, BINGO_CARD_SIZE)
 
         this.setState({
             arrangedBingoSpaces: newlyArrangedBingoSpaces,
@@ -117,7 +119,7 @@ export default class BingoChallengeGrid extends React.Component {
 
     pinBingoSpace(i) {
         this.setState(state => {
-            let { pinnedBingoSpaceIndexes } = state;
+            let {pinnedBingoSpaceIndexes} = state;
 
             pinnedBingoSpaceIndexes.push(i)
 
@@ -130,7 +132,7 @@ export default class BingoChallengeGrid extends React.Component {
 
     unpinBingoSpace(i) {
         this.setState(state => {
-            let { pinnedBingoSpaceIndexes } = state;
+            let {pinnedBingoSpaceIndexes} = state;
 
             pinnedBingoSpaceIndexes = pinnedBingoSpaceIndexes.filter(index => index !== i)
 
@@ -141,26 +143,25 @@ export default class BingoChallengeGrid extends React.Component {
         })
     }
 
-    banBingoSpace(i) {
+    banBingoSpace(bannedBingoSpace, i) {
         this.setState(state => {
-            let { bannedBingoSpaces, arrangedBingoSpaces } = state;
-            let bannedBingoSpace = arrangedBingoSpaces[i];
-            let { category } = bannedBingoSpace;
+            let {bannedBingoSpaces, arrangedBingoSpaces} = state;
+            let {category} = bannedBingoSpace;
 
-            let cleanBingoSpaces = _.cloneDeep(this.bingoChallengeSpaces);
+            let cleanBingoSpaces = _.cloneDeep(this.taskCollection);
 
             let bingoSpacesWithoutBannedSpaces = cleanBingoSpaces.filter((cleanSpace) => {
                 // remove current space
-                if (cleanSpace.task === bannedBingoSpace.task) {
+                if (cleanSpace.id === bannedBingoSpace.id) {
                     return false
                 }
-                return !bannedBingoSpaces.find(bannedSpace => bannedSpace.task === cleanSpace.task)
+                return !bannedBingoSpaces.find(bannedSpace => bannedSpace.id === cleanSpace.id)
             })
 
             // try to find a space with the same category and is not currently on the board
             let newBingoSpace = bingoSpacesWithoutBannedSpaces.find(space => {
                 return space.category === category
-                        && bingoSpacesWithoutBannedSpaces.find(currentlyPlacedSpace => currentlyPlacedSpace.task !== space.task)
+                        && bingoSpacesWithoutBannedSpaces.find(currentlyPlacedSpace => currentlyPlacedSpace.id !== space.id)
             })
 
             // if no space with the same category, get a random one
@@ -182,7 +183,7 @@ export default class BingoChallengeGrid extends React.Component {
 
     unbanSpace(i) {
         this.setState(state => {
-            let { bannedBingoSpaces } = state;
+            let {bannedBingoSpaces} = state;
 
             bannedBingoSpaces.splice(i, 1)
 
@@ -215,52 +216,62 @@ export default class BingoChallengeGrid extends React.Component {
         </div>
     }
 
+    Pin(i) {
+        const {pinnedBingoSpaceIndexes} = this.state
+
+        const isPinned = pinnedBingoSpaceIndexes.includes(i);
+
+        return <span className={`fa-stack ${!isPinned ? 'text-muted' : ''}`}
+                     style={{verticalAlign: 'top'}}
+                     onClick={() => isPinned ? this.unpinBingoSpace(i) : this.pinBingoSpace(i)}>
+                    <i className={`${isPinned ? 'fas' : 'far' } fa-circle fa-stack-2x`}/>
+                    <i className={`fas fa-thumbtack fa-stack-1x ${isPinned ? 'fa-inverse' : '' }`}/>
+        </span>
+    }
+
+    Ban(space, i) {
+        const {maxBingoSpacesBanned} = this.state;
+
+        if (maxBingoSpacesBanned) return;
+
+        return <span className="fas fa-ban text-danger" onClick={() => this.banBingoSpace(space, i)}/>
+    }
+
+    CenterSpaceHeader() {
+        const {isEditingFreestyleTask} = this.state;
+
+        return <header className="label no-print" onClick={() => this.toggleEditable()}>
+            <button type="button"
+                    className={`far fa-${isEditingFreestyleTask ? 'save' : 'edit'} btn btn-${isEditingFreestyleTask ? 'success' : 'warning'} btn-sm`}/>
+        </header>
+    }
+
+    CenterSpaceContent(space) {
+        const {isEditingFreestyleTask} = this.state;
+
+        return isEditingFreestyleTask ? this.EditTask() : space.task
+    }
+
+    SpaceHeader(space, i) {
+        return <header className={"pin-and-ban d-print-none"}>
+            <span className="pin">
+                {this.Pin(i)}
+            </span>
+            <span className="ban">
+                {this.Ban(space, i)}
+            </span>
+        </header>
+    }
+
+
     Space(space, i) {
         return <div
                 key={space.category + i}
                 className={`text-center space ${space.category} ${space.isCenter && 'editable'}`}
         >
-            {space.isCenter ?
-                    <header className="label no-print" onClick={() => this.toggleEditable()}>
-                    {this.state.isEditingFreestyleTask
-                                        ? <button type="button"
-                                                  className="far fa-save btn btn-success btn-sm">
-                                        </button>
-                                        : <button type="button"
-                                                  className="far fa-edit btn btn-warning btn-sm">
-                                        </button>
-                        }
-                </header>
-            : <header className={"pin-and-ban"}>
-                            <span className="pin">
-                                {this.state.pinnedBingoSpaceIndexes.includes(i)
-                                        ? <span className="fa-stack" style={{ verticalAlign: 'top' }}
-                                        onClick={() => this.unpinBingoSpace(i)}>
-                                            <i className="fas fa-circle fa-stack-2x"/>
-                                            <i className="fas fas fa-thumbtack fa-stack-1x fa-inverse"/>
-                                        </span>
-                                        : <span className="fa-stack text-muted" style={{ verticalAlign: 'top' }}
-                                                onClick={() => this.pinBingoSpace(i)}>
-                                            <i className="far fa-circle fa-stack-2x"/>
-                                            <i className="fas fas fa-thumbtack fa-stack-1x "/>
-
-
-                                        </span>}
-                            </span>
-                        {!this.state.maxBingoSpacesBanned && <span className="ban">
-                                    <span className="fas fa-ban text-danger"
-                                          onClick={() => this.banBingoSpace(i)}/>
-                            </span>
-                        }
-                        </header>
-            }
+            {space.isCenter ? this.CenterSpaceHeader() : this.SpaceHeader(space, i)}
             <div className="content">
-                {space.isCenter
-                        ? this.state.isEditingFreestyleTask
-                                ? this.EditTask()
-                                : this.state.freestyleTask
-                        : space.task
-                }
+                {space.isCenter ? this.CenterSpaceContent(space) : space.task}
                 <div className="repetition">
                     {this.createTaskBoxes(space.repetitions)}
                 </div>
@@ -268,10 +279,68 @@ export default class BingoChallengeGrid extends React.Component {
         </div>
     }
 
+    CreateTaskList() {
+        const {arrangedBingoSpaces} = this.state;
+
+        return <ListGroup className={"challenge-list"}>
+            {arrangedBingoSpaces.map((space, i) => <ListGroup.Item>
+                        <div className="pin">
+                            {this.Pin(i)}
+                        </div>
+                        <div className="task">
+                            {space.task}
+                        </div>
+                        <div className="ban">
+                            {this.Ban(space, i)}
+                        </div>
+                    </ListGroup.Item>
+            )}
+        </ListGroup>
+    }
+
+    BannedSpaces() {
+        const {bannedBingoSpaces} = this.state
+
+        if (bannedBingoSpaces.length < 1) {
+            return
+        }
+
+        return <div className="banned-spaces">
+            <h3 className="banned-spaces__title mb-3">Banned Spaces
+                <span className="ml-2 fas fa-ban text-danger"/>
+                <button className="btn btn-success float-right" onClick={() => this.clearBannedSpaces()}>Add All Back
+                    In
+                </button>
+            </h3>
+
+            <Row className="justify-content-md-center">
+                {bannedBingoSpaces.map((space, i) =>
+                        <Col sm={6} md={4} lg={3} className="banned-space text-center mb-3">
+                            <Card>
+                                <Card.Body>
+                                    {space.task}
+                                    <button className="mt-2 btn btn-success w-100"
+                                            onClick={() => this.unbanSpace(i)}
+                                    >
+                                        <i className="mr-1 fas fa-plus-circle "/> Add Back In Board
+                                    </button>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                )}
+            </Row>
+        </div>
+    }
+
+    CreateTaskBoard() {
+        const {arrangedBingoSpaces} = this.state;
+
+        return <div className="board">
+            {arrangedBingoSpaces.map((space, i) => this.Space(space, i))}
+        </div>
+    }
+
     render() {
-        const {arrangedBingoSpaces, bannedBingoSpaces } = this.state;
-
-
         return <>
             <Row className="no-print">
                 <Col>
@@ -281,31 +350,16 @@ export default class BingoChallengeGrid extends React.Component {
                     <button className="btn btn-success" onClick={() => window.print()}>Print</button>
                 </Col>
             </Row>
-            <hr className="no-print"/>
-            <div className="board mb-4">
-                {arrangedBingoSpaces.map((space, i) => this.Space(space, i))}
+            <hr className="d-print-none"/>
+            <div className="board-container d-none d-md-block mb-4">
+                {this.CreateTaskBoard()}
             </div>
-            {bannedBingoSpaces.length > 0 && <div className="banned-spaces">
-                <h3 className="banned-spaces__title mb-3">Banned Spaces
-                    <span className="ml-2 fas fa-ban text-danger"/>
-                    <button className="btn btn-success float-right" onClick={() => this.clearBannedSpaces()}>Unban All</button>
-                </h3>
-
-                <Row className="justify-content-md-center">
-                    {bannedBingoSpaces.map((space, i) =>
-                            <Col sm={3} className="banned-space text-center">
-                                <div className="card">
-                                    <div className="card-body">
-                                        {space.task}
-                                        <button className="mt-2 btn btn-success fas fa-plus-circle w-100"
-                                              onClick={() => this.unbanSpace(i)}
-                                        />
-                                    </div>
-                                </div>
-                            </Col>
-                    )}
-                </Row>
-            </div>}
+            <div className="list mb-4 d-md-none">
+                {this.CreateTaskList()}
+            </div>
+            <div className="d-print-none">
+                {this.BannedSpaces()}
+            </div>
         </>
     }
 }

@@ -6,8 +6,10 @@ const { parseImage } = require('./contentful.parser')
 
 function parseChallngeBingoSpaces(spaces) {
     const parsedSpaces = spaces.map(space => {
+        let { id } = space.sys
         let { task, repetitions, category, challengeAssigned } = space.fields
         return {
+            id,
             task,
             repetitions,
             category: category.fields.name,
@@ -36,8 +38,8 @@ function parseChallengeBingo(challengeBingo) {
     return {
         title,
         numberOfSpaces,
-        bingoChallengeSpaces: parseChallngeBingoSpaces(taskCollection),
-        bingoChallengeGridTemplate: parseChallngeBingoSpacesTemplate(bingoChallengeGridTemplate)
+        bingoChallengeGridTemplate: parseChallngeBingoSpacesTemplate(bingoChallengeGridTemplate),
+        taskCollection: parseChallngeBingoSpaces(taskCollection)
     }
 }
 

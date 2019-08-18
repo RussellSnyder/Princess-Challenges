@@ -4,6 +4,7 @@ import {Col, Image, Row} from "react-bootstrap";
 import {Link} from "gatsby"
 
 import BingoChallengeGrid from '../components/BingoChallengeGrid'
+import Card from "react-bootstrap/Card";
 
 export default class Challenge extends React.Component {
     constructor(props) {
@@ -44,6 +45,7 @@ export default class Challenge extends React.Component {
                 <section className="description" dangerouslySetInnerHTML={{__html: props.description}}/>
             </Row>
             <section className="challenge-bingo">
+                <h3 className="d-print-none">Tasks</h3>
                 <BingoChallengeGrid { ...props } />
             </section>
             <section className="pinterst no-print">
@@ -61,8 +63,23 @@ export default class Challenge extends React.Component {
             <section className="related-posts no-print">
                 <Row>
                     {props.relevantBlogPosts.map(post => {
-                        return <Col key={post.slug}>
-                            <Link to={`blog/${post.slug}`}>{post.title}</Link>
+                        return <Col className={"mb-4"} key={post.slug} sm={6} md={4}>
+                            <Card>
+                                <Card.Body>
+                                    <Card.Title>
+                                        {post.title}
+                                    </Card.Title>
+                                    <Card.Text>
+                                        <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                            {post.short}
+                                        </div>
+                                        <Link className={"w-100 mt-4 btn btn-primary"} to={`blog/${post.slug}`}>
+                                            Read Post <i className="ml-2 fas fa-external-link-alt"/>
+                                        </Link>
+                                    </Card.Text>
+                                </Card.Body>
+                            </Card>
+                            {/*<Link to={`blog/${post.slug}`}>{post.title}</Link>*/}
                         </Col>
                     })}
                 </Row>
