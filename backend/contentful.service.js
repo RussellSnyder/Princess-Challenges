@@ -4,6 +4,7 @@ const CONTENT_TYPES = {
     CHALLENGE_BINGO_GRID: "challengeBingoGrid",
     CHALLENGE_BINGO_SPACE: "challengeBingoSpace",
     CHALLENGE_SPACE_CATEGORIES: "challengeSpaceCategories",
+    QUIZ: "quiz",
     TAG: "tag"
 }
 

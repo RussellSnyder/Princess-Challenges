@@ -1,17 +1,17 @@
 'use strict';
 const {CONTENT_TYPES} = require("./contentful.service")
-const {parseChallenge} = require('./challenge.parser')
+const {parseQuiz} = require('./quiz.parser')
 
 module.exports = class ChallengeModel {
     constructor(client) {
         this.client = client;
     }
 
-    getAllChallenges() {
+    getAllQuizzes() {
         const {client} = this;
 
         return client.getEntries({
-            content_type: CONTENT_TYPES.CHALLENGE,
+            content_type: CONTENT_TYPES.QUIZ,
             include: 10
         })
                 .then(function (entries) {
@@ -19,7 +19,7 @@ module.exports = class ChallengeModel {
                 })
                 .then(function (entries) {
                     return entries.items.map(function (entry) {
-                        return parseChallenge(entry)
+                        return parseQuiz(entry)
                     })
                 })
                 .catch(e => console.log(e))

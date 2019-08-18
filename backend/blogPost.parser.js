@@ -6,7 +6,7 @@ function parseBlogPost(post) {
         return
     }
 
-    let {title, short, long, tags} = post.fields
+    let {title, short, long, tags, featured} = post.fields
 
     let renderedLong = documentToHtmlString(long);
 
@@ -18,6 +18,7 @@ function parseBlogPost(post) {
 
     return {
         title,
+        featured,
         slug: slugify(title, {
             lower: true
         }),

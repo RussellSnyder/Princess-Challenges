@@ -43,6 +43,7 @@ function parseChallengeBingo(challengeBingo) {
     }
 }
 
+
 function parseChallenge(challenge) {
     let {
         title,
@@ -55,7 +56,10 @@ function parseChallenge(challenge) {
         relevantBlogPosts, // fetch more data later
     } = challenge.fields
 
+    let { id } = challenge.sys
+
     return {
+        id,
         title,
         slug: slugify(title, {
             lower: true

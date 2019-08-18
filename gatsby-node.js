@@ -1,11 +1,5 @@
 const contentful = require('contentful')
 
-const activeEnv = process.env.GATSBY_ACTIVE_ENV || process.env.NODE_ENV || "development"
-
-require("dotenv").config({
-    path: `.env.${activeEnv}`,
-})
-
 if (process.env.CONTENTFUL_ACCESS_TOKEN && process.env.CONTENTFUL_SPACE_ID) {
     console.log(".env data read")
 } else {
@@ -26,6 +20,11 @@ const blogPostModel = new BlogPostModel(client)
 const ChallengeModel = require('./backend/challenge.model')
 const challengeModel = new ChallengeModel(client)
 
+const QuizModel = require('./backend/quiz.model')
+const quizModel = new QuizModel(client)
+
+// Get gatsby meta data
+const siteMetadata = require("./gatsby-config").siteMetadata
 
 exports.createPages = async ({ actions: { createPage } }) => {
 
@@ -35,14 +34,14 @@ exports.createPages = async ({ actions: { createPage } }) => {
     createPage({
         path: `/challenges`,
         component: require.resolve("./src/templates/challenges.js"),
-        context: { allChallenges },
+        context: { allChallenges, siteMetadata },
     })
 
     allChallenges.forEach(challenge => {
         createPage({
             path: `/challenge/${challenge.slug}/`,
             component: require.resolve("./src/templates/challenge.js"),
-            context: { ...challenge },
+            context: { ...challenge, siteMetadata },
         })
     })
 
@@ -52,14 +51,33 @@ exports.createPages = async ({ actions: { createPage } }) => {
     createPage({
         path: `/blog`,
         component: require.resolve("./src/templates/blog.js"),
-        context: { allBlogPosts },
+        context: { allBlogPosts, siteMetadata },
     })
 
     allBlogPosts.forEach(post => {
         createPage({
             path: `/blog/${post.slug}/`,
             component: require.resolve("./src/templates/post.js"),
-            context: { ...post },
+            context: { ...post, siteMetadata },
         })
     })
+
+    const allQuizzes = await quizModel.getAllQuizzes()
+            .catch(e => console.log(e))
+
+    createPage({
+        path: `/quizzes`,
+        component: require.resolve("./src/templates/quizzes.js"),
+        context: { allQuizzes, siteMetadata },
+    })
+
+    allQuizzes.forEach(quiz => {
+        createPage({
+            path: `/quiz/${quiz.slug}/`,
+            component: require.resolve("./src/templates/quiz.js"),
+            context: { ...quiz, allChallenges, siteMetadata },
+        })
+    })
+
+
 }

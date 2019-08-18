@@ -1,3 +1,3 @@
 import React from "react";
 
-export default ({ children }) => <h1>This is a header.</h1>;
+export default ({ children }) => <h1>{children}</h1>;

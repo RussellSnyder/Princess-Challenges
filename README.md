@@ -6,3 +6,7 @@
 
 
 Settings for each challenge?
+
+// TODO
+fix doubling of spaces in beach peach (eat / drink coconut)
+

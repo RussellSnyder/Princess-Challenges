@@ -5,9 +5,5 @@ require("dotenv").config({
 })
 
 module.exports = {
-    siteMetadata: {
-        title: "Irini's Challenges",
-        apiUrl: process.env.API_URL,
-    },
     plugins: [`gatsby-plugin-less`]
 }
